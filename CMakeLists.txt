@@ -25,7 +25,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #    endif()
 #endif()
 
-find_package(Qt5 COMPONENTS Widgets WebKit REQUIRED)
+find_package(Qt5 COMPONENTS Widgets WebEngine REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -38,4 +38,4 @@ add_executable(FBrowser
     ${PROJECT_SOURCES}
 )
 
-target_link_libraries(FBrowser PRIVATE Qt5::Widgets Qt5::WebKit Qt5WebKitWidgets)
+target_link_libraries(FBrowser PRIVATE Qt5::Widgets Qt5::WebEngine Qt5WebEngineWidgets)

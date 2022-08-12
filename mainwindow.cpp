@@ -13,36 +13,34 @@
 
 void MainWindow::configureWebView() {
   // Disable anti-aliasing for better performance
-  webView->setRenderHint(QPainter::Antialiasing, false);
-  webView->setRenderHint(QPainter::TextAntialiasing, false);
-  webView->setRenderHint(QPainter::SmoothPixmapTransform, false);
+//  webView->setRenderHint(QPainter::Antialiasing, false);
+//  webView->setRenderHint(QPainter::TextAntialiasing, false);
+//  webView->setRenderHint(QPainter::SmoothPixmapTransform, false);
   // Enable basic JavaScript support
-  webView->settings()->setAttribute(QWebSettings::JavascriptEnabled, true);
-  webView->settings()->setAttribute(QWebSettings::PluginsEnabled, true);
-  webView->settings()->setAttribute(QWebSettings::LocalStorageEnabled, true);
-  webView->settings()->setAttribute(QWebSettings::OfflineStorageDatabaseEnabled,
-                                    true);
-  webView->settings()->setAttribute(
-      QWebSettings::OfflineWebApplicationCacheEnabled, true);
+//  webView->settings()->setAttribute(QWebEngineSettings::JavascriptEnabled, true);
+//  webView->settings()->setAttribute(QWebEngineSettings::PluginsEnabled, true);
+//  webView->settings()->setAttribute(QWebEngineSettings::LocalStorageEnabled, true);
+//  webView->settings()->setAttribute(QWebEngineSettings::OfflineStorageDatabaseEnabled,
+  //                                  true);
+ // webView->settings()->setAttribute(
+  //    QWebEngineSettings::OfflineWebApplicationCacheEnabled, true);
 
   // Enable WebAudio
-  webView->settings()->setAttribute(QWebSettings::WebAudioEnabled, true);
+ // webView->settings()->setAttribute(QWebEngineSettings::WebAudioEnabled, true);
   // Don't allow JavaScript to open/close windows
-  webView->settings()->setAttribute(QWebSettings::JavascriptCanOpenWindows,
-                                    false);
-  webView->settings()->setAttribute(QWebSettings::JavascriptCanCloseWindows,
-                                    false);
+ // webView->settings()->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows,
+    //                                false);
+  //webView->settings()->setAttribute(QWebEngineSettings::JavascriptCanCloseWindows,
+  //                                  false);
   // Allow JavaScript to access clipboard
-  webView->settings()->setAttribute(QWebSettings::JavascriptCanAccessClipboard,
-                                    true);
+ // webView->settings()->setAttribute(QWebEngineSettings::JavascriptCanAccessClipboard,
+   //                                 true);
   // Allow universal access from file URLs
-  webView->settings()->setAttribute(QWebSettings::LocalContentCanAccessFileUrls,
-                                    true);
-  webView->settings()->setAttribute(
-      QWebSettings::LocalContentCanAccessRemoteUrls, true);
+ // webView->settings()->setAttribute(QWebEngineSettings::LocalContentCanAccessFileUrls,true);
+//  webView->settings()->setAttribute(QWebEngineSettings::LocalContentCanAccessRemoteUrls, true);
 
   // Show Web Inspector
-  webView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+//  webView->settings()->setAttribute(QWebEngineSettings::DeveloperExtrasEnabled, true);
 
   // Disallow cache
   
@@ -73,7 +71,7 @@ MainWindow::MainWindow()
   // setWindowState(Qt::WindowFullScreen);
 
   // Create the web view
-  webView = new QWebView(this);
+  webView = new QWebEngineView(this);
   configureWebView();
   // Add the web view to our window
   setCentralWidget(webView);
@@ -94,12 +92,13 @@ void MainWindow::onLoadStarted() {
     enableJSBridge = optEnableJSBridge;
     enableOSBridge = optEnableOSBridge;
 
-    if (enableJSBridge) {
+/*    if (enableJSBridge) {
       webView->page()->mainFrame()->addToJavaScriptWindowObject("FB_JSBridge", &jsBridge);
     }
     if (enableOSBridge) {
       webView->page()->mainFrame()->addToJavaScriptWindowObject("FB_OSBridge", &osBridge);
     }                                                          
+*/
 }
 
 void MainWindow::loadUrl(QString url) {

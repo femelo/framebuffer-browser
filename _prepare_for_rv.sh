@@ -1,1 +1,0 @@
-cmake -DCMAKE_TOOLCHAIN_FILE=/opt/sdk/rv/share/buildroot/toolchainfile.cmake  ..

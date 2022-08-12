@@ -4,8 +4,8 @@
 #include <QMainWindow>
 #include <QMenu>
 #include <QWidget>
-#include <QtWebKitWidgets/QWebFrame>
-#include <QtWebKitWidgets/QWebView>
+#include <QtWebEngineWidgets/QWebEnginePage>
+#include <QtWebEngineWidgets/QWebEngineView>
 
 class JSBridge : public QObject {
   Q_OBJECT
@@ -42,7 +42,7 @@ class MainWindow : public QMainWindow {
  public:
   JSBridge jsBridge;
   OSBridge osBridge;
-  QWebView *webView;
+  QWebEngineView *webView;
   explicit MainWindow();
   ~MainWindow();
   void configureWebView();
