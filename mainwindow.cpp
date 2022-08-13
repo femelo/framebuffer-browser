@@ -9,48 +9,79 @@
 #include <QNetworkProxy>
 #include <QTimer>
 #include <QProcess>
+#include <QDebug>
+#include <QtWebEngineWidgets/QWebEngineFullScreenRequest>
+#include <QtWebEngineWidgets/QWebEngineProfile>
+#include <QtWebEngineWidgets/QWebEngineSettings>
 
+
+void MainWindow::closeEvent(QCloseEvent *) {
+  // This will be called whenever this window is closed.
+  writeSettings();
+  qDebug() << "closing";
+}
 
 void MainWindow::configureWebView() {
-  // Disable anti-aliasing for better performance
-//  webView->setRenderHint(QPainter::Antialiasing, false);
-//  webView->setRenderHint(QPainter::TextAntialiasing, false);
-//  webView->setRenderHint(QPainter::SmoothPixmapTransform, false);
   // Enable basic JavaScript support
-//  webView->settings()->setAttribute(QWebEngineSettings::JavascriptEnabled, true);
-//  webView->settings()->setAttribute(QWebEngineSettings::PluginsEnabled, true);
-//  webView->settings()->setAttribute(QWebEngineSettings::LocalStorageEnabled, true);
-//  webView->settings()->setAttribute(QWebEngineSettings::OfflineStorageDatabaseEnabled,
-  //                                  true);
- // webView->settings()->setAttribute(
-  //    QWebEngineSettings::OfflineWebApplicationCacheEnabled, true);
-
-  // Enable WebAudio
- // webView->settings()->setAttribute(QWebEngineSettings::WebAudioEnabled, true);
+  webView->settings()->setAttribute(QWebEngineSettings::JavascriptEnabled, true);
+  webView->settings()->setAttribute(QWebEngineSettings::PluginsEnabled, true);
+  webView->settings()->setAttribute(QWebEngineSettings::LocalStorageEnabled, true);
   // Don't allow JavaScript to open/close windows
- // webView->settings()->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows,
-    //                                false);
-  //webView->settings()->setAttribute(QWebEngineSettings::JavascriptCanCloseWindows,
-  //                                  false);
+  webView->settings()->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows,false);
   // Allow JavaScript to access clipboard
- // webView->settings()->setAttribute(QWebEngineSettings::JavascriptCanAccessClipboard,
-   //                                 true);
+  webView->settings()->setAttribute(QWebEngineSettings::JavascriptCanAccessClipboard,true);
   // Allow universal access from file URLs
- // webView->settings()->setAttribute(QWebEngineSettings::LocalContentCanAccessFileUrls,true);
-//  webView->settings()->setAttribute(QWebEngineSettings::LocalContentCanAccessRemoteUrls, true);
+  webView->settings()->setAttribute(QWebEngineSettings::LocalContentCanAccessFileUrls,true);
+  webView->settings()->setAttribute(QWebEngineSettings::LocalContentCanAccessRemoteUrls, true);
+  // Enable full screen request
+  webView->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
+}
 
-  // Show Web Inspector
-//  webView->settings()->setAttribute(QWebEngineSettings::DeveloperExtrasEnabled, true);
 
-  // Disallow cache
-  
+void MainWindow::writeSettings() {
+  // Write the values to disk in categories.
+  QString site = webView->url().toString();
+  appSettings->setValue("site", site);
+  qDebug() << " write settings:" << site;
+  QString hostname = webView->url().host();
+  webView->setUrl(appSettings->value("site").toString());
+}
+
+void MainWindow::fullScreenRequested(QWebEngineFullScreenRequest request) {
+  // fullscreen on video players
+
+  if (request.toggleOn() && !this->isFullScreen()) {
+    this->showFullScreen();
+  } else {
+    this->showNormal();
+  }
+  request.accept();
+}
+
+
+// Slot handler for Ctrl + Q
+void MainWindow::slotShortcutCtrlQ() {
+  writeSettings();
+  webView->deleteLater(); // leave gracefully
+  QApplication::quit();
+}
+
+// Slot handler for Ctrl + Left
+void MainWindow::slotShortcutBack() {
+   qDebug() << "Going back..";
+   webView->page()->triggerAction(QWebEnginePage::Back);
+}
+
+// Slot handler for Ctrl + Right
+void MainWindow::slotShortcutForward() {
+   qDebug() << "Going forward..";
+   webView->page()->triggerAction(QWebEnginePage::Forward);
 }
 
 MainWindow::MainWindow()
-    : QMainWindow(),
-      jsBridge(this) ,
-      osBridge(this) {
+    : QMainWindow() {
   loadConfig();
+
 
   // Load proxy settings
   if (optProxyHost != "") {
@@ -67,14 +98,32 @@ MainWindow::MainWindow()
       resize(optWidth, optHeight);
   }
 
-  // Make our window full-screen
-  // setWindowState(Qt::WindowFullScreen);
-
   // Create the web view
   webView = new QWebEngineView(this);
+
   configureWebView();
   // Add the web view to our window
   setCentralWidget(webView);
+
+  // connect handler for fullscreen press on video
+  connect(webView->page(), &QWebEnginePage::fullScreenRequested, this, &MainWindow::fullScreenRequested);
+
+  // Ctrl + Q
+  keyCtrlQ = new QShortcut(this);         // Initialize the object
+  keyCtrlQ->setKey(Qt::CTRL + Qt::Key_Q); // Set the key code
+  // connect handler to keypress
+  connect(keyCtrlQ, SIGNAL(activated()), this, SLOT(slotShortcutCtrlQ()));
+
+  keyBack = new QShortcut(this);
+  keyBack->setKey(Qt::CTRL + Qt::Key_Left);
+  connect(keyBack, SIGNAL(activated()), this, SLOT(slotShortcutBack()));
+
+  keyForward = new QShortcut(this);
+  keyForward->setKey(Qt::CTRL + Qt::Key_Right);
+  connect(keyForward, SIGNAL(activated()), this, SLOT(slotShortcutForward()));
+
+  this->webView->page()->profile()->setHttpUserAgent("Mozilla/5.0 (X11; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0");
+
   // Handle page load events
   connect(webView, SIGNAL(loadStarted()), this, SLOT(onLoadStarted()));
 
@@ -86,19 +135,6 @@ MainWindow::~MainWindow() {}
 
 void MainWindow::onLoadStarted() { 
     qDebug() << "onLoadStarted"; 
-    bool enableJSBridge = false;
-    bool enableOSBridge = false;
-
-    enableJSBridge = optEnableJSBridge;
-    enableOSBridge = optEnableOSBridge;
-
-/*    if (enableJSBridge) {
-      webView->page()->mainFrame()->addToJavaScriptWindowObject("FB_JSBridge", &jsBridge);
-    }
-    if (enableOSBridge) {
-      webView->page()->mainFrame()->addToJavaScriptWindowObject("FB_OSBridge", &osBridge);
-    }                                                          
-*/
 }
 
 void MainWindow::loadUrl(QString url) {
@@ -147,21 +183,7 @@ void MainWindow::loadConfig() {
   if (configObject.contains("proxyPort")) {
     optProxyPort = configObject["proxyPort"].toInt();
   }
-  if (configObject.contains("enableJSBridge")) {
-    optEnableJSBridge = configObject["enableJSBridge"].toBool();
-  }
-  if (configObject.contains("enableOSBridge")) {
-    optEnableOSBridge = configObject["enableOSBridge"].toBool();
-  }
 }
 
 
-QString OSBridge::runCmd(QStringList args) {
-  QProcess proc;
-  QString program = args[0];
-  QStringList arguments = args.mid(1);
-  proc.start(program, arguments);
-  proc.waitForFinished();
-  QString output = proc.readAllStandardOutput();
-  return output;
-}
+

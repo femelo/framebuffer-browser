@@ -4,44 +4,23 @@
 #include <QMainWindow>
 #include <QMenu>
 #include <QWidget>
+#include <QShortcut>
+#include <QSettings>
+#include <QtWebEngineWidgets/QWebEngineFullScreenRequest>
 #include <QtWebEngineWidgets/QWebEnginePage>
 #include <QtWebEngineWidgets/QWebEngineView>
-
-class JSBridge : public QObject {
-  Q_OBJECT
- public:
-  QMainWindow *mainWindow;
-  JSBridge(QMainWindow *mainWindow) : QObject(mainWindow) {
-    this->mainWindow = mainWindow;
-  }
-};
-
-class OSBridge : public QObject {
-  Q_OBJECT
- public:
-  QMainWindow *mainWindow;
-  OSBridge(QMainWindow *mainWindow) : QObject(mainWindow) {
-    this->mainWindow = mainWindow;
-  }
- public slots:
-  QString runCmd(QStringList args);
-};
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
 
   // Define signals and slots
-  QString optStartupUrl = "./www/index.html";
+  QString optStartupUrl;
   int optWidth = 0;
   int optHeight = 0;
-  bool optEnableJSBridge = true;
-  bool optEnableOSBridge = true;
   QString optProxyHost = "";
   int optProxyPort = 0;
 
  public:
-  JSBridge jsBridge;
-  OSBridge osBridge;
   QWebEngineView *webView;
   explicit MainWindow();
   ~MainWindow();
@@ -52,6 +31,18 @@ class MainWindow : public QMainWindow {
  public slots:
   void loadStartupUrl();
   void onLoadStarted();
+  void slotShortcutCtrlQ();
+  void slotShortcutBack();
+  void slotShortcutForward();
+ private:
+  QShortcut *keyCtrlQ; // Entity of Ctrl + Q hotkeys
+  QShortcut *keyBack; // back in history
+  QShortcut *keyForward; // forward in history
+  void fullScreenRequested(QWebEngineFullScreenRequest request);
+  void writeSettings();
+  QSettings *appSettings;
+ protected:
+  void closeEvent(QCloseEvent *);
 };
 
 #endif  // BROWSERWINDOW_H
