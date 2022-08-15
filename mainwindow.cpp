@@ -18,7 +18,7 @@
 void MainWindow::closeEvent(QCloseEvent *) {
   // This will be called whenever this window is closed.
   writeSettings();
-  qDebug() << "closing";
+  qDebug() << "closing2";
 }
 
 void MainWindow::configureWebView() {
@@ -58,10 +58,10 @@ void MainWindow::fullScreenRequested(QWebEngineFullScreenRequest request) {
   request.accept();
 }
 
-
 // Slot handler for Ctrl + Q
 void MainWindow::slotShortcutCtrlQ() {
-  writeSettings();
+  qDebug() << "closing1";
+//  writeSettings();
   webView->deleteLater(); // leave gracefully
   QApplication::quit();
 }

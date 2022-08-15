@@ -1,0 +1,24 @@
+#!/bin/sh
+export QT_QPA_PLATFORM=linuxfb:fb=/dev/fb0:nographicsmodeswitch=1
+# Touchscreen support, see info using utility evtest
+export QT_QPA_EVDEV_TOUCHSCREEN_PARAMETERS=/dev/input/event13
+# Keyboard support, see info using utility evtest
+export QT_QPA_EVDEV_KEYBOARD_PARAMETERS=/dev/input/event3:grab=1
+# debug logging
+export QT_LOGGING_RULES=qt.qpa.input=true
+# Disable libinput support for fb
+export QT_QPA_FB_NO_LIBINPUT=1
+# Disable libinput support for eglfs
+export QT_QPA_EGLFS_NO_LIBINPUT=1
+# Force full screen mode
+export QT_QPA_FB_FORCE_FULLSCREEN=1
+# attempt to disable the terminal keyboard on application startup by setting the tty's keyboard mode to K_OFF
+export QT_QPA_ENABLE_TERMINAL_KEYBOARD=0
+
+# turn off tty1 cursor blinking
+setterm -cursor off > /dev/tty1
+./build/FBrowser
+# clear framebuffer
+cat /dev/zero >/dev/fb0
+# back on tt1 cursor blinking
+setterm -cursor on > /dev/tty1

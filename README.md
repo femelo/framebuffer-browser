@@ -26,21 +26,20 @@ emerge -av qtwebengine qtwidgets
 ```shell
 git clone https://github.com/e1z0/Framebuffer-browser.git
 cd Framebuffer-browser
-mkdir build && cd build && cmake .. && make
-./FBrowser --platform linuxfb
+mkdir build && cd build && cmake .. && make && cd ..
+./run-fb
 ```
+# Configure
 
-If there is a problem with keyboard to not responding, you can specify keyboard device, take a look at your devices by issuing:
-```shell
-ls -lsah /dev/input/by-path/
+All device input and other settings are described either in **run-fb** or **run-eglfs** files, also note that your local account must be in the following groups:
 ```
-
-And then use the desired device:
-```shell
-./FBrowser --platform linuxfb --plugin evdevkeyboard:/dev/input/event3
+tty, audio, video, usb, input
 ```
-Mouse also can be specified with the evdevmouse parameter
+- ./run-fb - uses linux framebuffer device (unaccelerated vesa mode)
+- ./run-eglfs - uses linux kernel mode setting drm drivers (accelerated, your device must be supported by the kernel) https://wiki.archlinux.org/title/kernel_mode_setting#Early_KMS_start
 
+
+All other parameters are described here: https://doc.qt.io/archives/qt-5.12/embedded-linux.html
 
 # License
 
