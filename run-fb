@@ -19,6 +19,6 @@ export QT_QPA_ENABLE_TERMINAL_KEYBOARD=0
 setterm -cursor off > /dev/tty1
 ./build/FBrowser "$@"
 # clear framebuffer
-cat /dev/zero >/dev/fb0
+cat /dev/zero 1>/dev/fb0 2>/dev/null
 # back on tt1 cursor blinking
 setterm -cursor on > /dev/tty1
