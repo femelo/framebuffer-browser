@@ -6,6 +6,7 @@ QtWebEngine-based web browser for Linux framebuffer.
 
 [![Browser in action](https://j.gifs.com/ywn3rg.gif)]()
 
+You can see more videos [here](promo.md).
 
 # Prologue
 
@@ -51,8 +52,13 @@ Also there are some changes recently, I was able to port simplebrowser from QT e
 
 ![FBrowser_fullbrowser_mode](https://user-images.githubusercontent.com/7213361/184993266-be8405f5-6df0-4a79-b97a-594de1b2c6a4.png)
 
+You can compile it with "FULLBROWSER" cmake option. See more videos [here](promo.md).
 
-You can compile it with "FULLBROWSER" cmake option.
+# TODO
+
+* cmake option for statically linking
+* easy cross platform build options
+* autobuild and package for some popular distributions
 
 # License
 
