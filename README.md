@@ -2,6 +2,11 @@
 
 QtWebEngine-based web browser for Linux framebuffer.
 
+
+
+[![Browser in action](https://j.gifs.com/ywn3rg.gif)]()
+
+
 # Prologue
 
 I'm a collector, owning wide range of 90's 2000's era computers, some of them running linux for some managing purposes, I need to copy software, google for some things and so on. I do not need full featured linux distro, I don't even need a Linux distro at all. All i want is plain Linux with busybox  and a decent browser. But i'm forced to install full featured distro because the small one does not come with bloatware (Xorg or Wayland), i don't need that. I need framebuffer on Linux!
@@ -12,9 +17,9 @@ As a Linux framebuffer user, I'd know the need of good browser for framebuffer, 
 1. A simple web browser that draws on framebuffer directly, does not require X server.
 2. Low memory footprint, works well on devices with >= 128MB RAM.
 3. Webkit-based, supports modern HTML5 features, 100/100 on ACID3 test.
-4. No OpenGL implementation required, works on embedded processors that have no GPU or GPU driver is not available.
+4. No OpenGL implementation required, works on embedded processors that have no GPU or GPU driver is not available. OpenGL support is also available.
 5. Packaged as a rootfs including all dependencies, could be used as a standalone OS or inside a chroot container on existing Linux distributions.
-6. Have basic hotkeys for navigation, mouse and keyboard support as well as custom devices which where supported by evdev and QT
+6. Have basic hotkeys for navigation, mouse and keyboard support as well as custom devices which where supported by evdev and QT (touchscreens,touchpads,joysticks etc...)
 7. Full screen video player support (youtube etc...)
 
 # Install
@@ -38,8 +43,16 @@ tty, audio, video, usb, input
 - ./run-fb - uses linux framebuffer device (unaccelerated vesa mode)
 - ./run-eglfs - uses linux kernel mode setting drm drivers (accelerated, your device must be supported by the kernel) https://wiki.archlinux.org/title/kernel_mode_setting#Early_KMS_start
 
-
 All other parameters are described here: https://doc.qt.io/archives/qt-5.12/embedded-linux.html
+
+# Full browser mode
+
+Also there are some changes recently, I was able to port simplebrowser from QT examples and it works in framebuffer very nicely, you can check it out.
+
+![FBrowser_fullbrowser_mode](https://user-images.githubusercontent.com/7213361/184993266-be8405f5-6df0-4a79-b97a-594de1b2c6a4.png)
+
+
+You can compile it with "FULLBROWSER" cmake option.
 
 # License
 
