@@ -4,7 +4,7 @@ export QT_QPA_PLATFORM=eglfs
 # Use the KMS/DRM backend.
 export QT_QPA_EGLFS_INTEGRATION=eglfs_kms
 # Touchscreen support, see info using utility evtest
-export QT_QPA_EVDEV_TOUCHSCREEN_PARAMETERS=/dev/input/event13
+export QT_QPA_EVDEV_TOUCHSCREEN_PARAMETERS=/dev/input/event11
 # Keyboard support, see info using utility evtest
 export QT_QPA_EVDEV_KEYBOARD_PARAMETERS=/dev/input/event3:grab=1
 # Disable libinput support for eglfs
