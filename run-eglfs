@@ -19,7 +19,7 @@ export QT_LOGGING_RULES=qt.qpa.input=true
 
 # turn off tty1 cursor blinking
 #setterm -cursor off > /dev/tty1
-./build/FBrowser
+./build/FBrowser "$@"
 # clear framebuffer
 #cat /dev/zero >/dev/fb0
 # back on tt1 cursor blinking
