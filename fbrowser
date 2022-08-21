@@ -2,7 +2,7 @@
 ARGS="$@"
 
 static_settings() {
-  EXECUTABLE=fbrowser
+  EXECUTABLE=fbrowser-bin
 }
 
 load_settings() {

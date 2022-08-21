@@ -13,7 +13,6 @@ set(CMAKE_AUTORCC ON)
 set(FULLBROWSER OFF CACHE BOOL "Full Featured Browser Support")
 configure_file(config.h.in config.h)
 
-
 find_package(Qt5 REQUIRED COMPONENTS Core Gui WebEngineWidgets)
 add_definitions (-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
