@@ -60,6 +60,12 @@ You can compile it with "FULLBROWSER" cmake option. See more videos [here](promo
 * easy cross platform build options
 * autobuild and package for some popular distributions
 
+# More information on Linux Framebuffer
+
+* https://github.com/caramelli/higfxback/blob/master/Linux-Framebuffer.md
+* https://github.com/caramelli/fbmark
+
+
 # License
 
 This project is licensed under the LGPLv3 and commercial license.
