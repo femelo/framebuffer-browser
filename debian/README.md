@@ -22,7 +22,7 @@ dpkg -i *. # install again
 * x86_64
 * i386
 
-# What are the executable of the problem ?
+# What are the executable of the program ?
 
 ```
 fbrowser
