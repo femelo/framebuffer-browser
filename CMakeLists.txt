@@ -45,7 +45,7 @@ add_executable(FBrowser
 )
 
 target_link_libraries(FBrowser PUBLIC
-    Qt::Core
-    Qt::Gui
-    Qt::WebEngineWidgets
+    Qt5::Core
+    Qt5::Gui
+    Qt5::WebEngineWidgets
 )
