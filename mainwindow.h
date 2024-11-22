@@ -46,7 +46,7 @@ class MainWindow : public QMainWindow {
   void writeSettings();
   QSettings *appSettings;
  protected:
-  void closeEvent(QCloseEvent *);
+  void closeEvent(QCloseEvent *) override;
 };
 
 #endif  // BROWSERWINDOW_H
