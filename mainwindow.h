@@ -6,9 +6,9 @@
 #include <QWidget>
 #include <QShortcut>
 #include <QSettings>
-#include <QtWebEngineWidgets/QWebEngineFullScreenRequest>
-#include <QtWebEngineWidgets/QWebEnginePage>
-#include <QtWebEngineWidgets/QWebEngineView>
+#include <QWebEngineFullScreenRequest>
+#include <QWebEnginePage>
+#include <QWebEngineView>
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
