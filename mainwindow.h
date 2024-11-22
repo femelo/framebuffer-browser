@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QShortcut>
 #include <QSettings>
+#include <QQuickWidget>
 #include <QtWebEngineWidgets/QWebEngineFullScreenRequest>
 #include <QtWebEngineWidgets/QWebEnginePage>
 #include <QtWebEngineWidgets/QWebEngineView>
@@ -21,14 +22,17 @@ class MainWindow : public QMainWindow {
   int optProxyPort = 0;
 
  public:
+  QQuickWidget *qmlView;
   QWebEngineView *webView;
   explicit MainWindow();
   ~MainWindow();
   void configureWebView();
   void loadConfig();
-  void loadUrl(QString url);
+  void loadUri(QString uri);
 
  public slots:
+  void loadQml(QString uri);
+  void loadUrl(QString url);
   void loadStartupUrl();
   void onLoadStarted();
   void slotShortcutCtrlQ();

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.30)
 project(FBrowser LANGUAGES CXX)
 
 file(GLOB source_files *.c *.cpp *.qrc)
@@ -13,7 +13,7 @@ set(CMAKE_AUTORCC ON)
 set(FULLBROWSER OFF CACHE BOOL "Full Featured Browser Support")
 configure_file(config.h.in config.h)
 
-find_package(Qt5 REQUIRED COMPONENTS Core Gui WebEngineWidgets)
+find_package(Qt5 REQUIRED COMPONENTS Core Gui WebEngineWidgets QuickWidgets)
 add_definitions (-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 if (FULLBROWSER)
@@ -48,4 +48,5 @@ target_link_libraries(FBrowser PUBLIC
     Qt5::Core
     Qt5::Gui
     Qt5::WebEngineWidgets
+    Qt5::QuickWidgets
 )

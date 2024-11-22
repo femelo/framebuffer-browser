@@ -27,7 +27,8 @@ QUrl commandLineUrlArgument()
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setOrganizationName("e1z0");
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+    QCoreApplication::setOrganizationName("fb-browser");
     QApplication a(argc, argv);
 #ifdef FULLBROWSER
     qDebug() << "full browser mode enabled";

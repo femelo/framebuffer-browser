@@ -100,6 +100,7 @@ MainWindow::MainWindow()
 
   // Create the web view
   webView = new QWebEngineView(this);
+  qmlView = new QQuickWidget(this);
 
   configureWebView();
   // Add the web view to our window
@@ -137,6 +138,14 @@ void MainWindow::onLoadStarted() {
     qDebug() << "onLoadStarted"; 
 }
 
+void MainWindow::loadUri(QString uri) {
+  if (uri.endsWith(".qml")) {
+    loadQml(uri);
+  } else {
+    loadUrl(uri);
+  }
+}
+
 void MainWindow::loadUrl(QString url) {
   if (url.startsWith("./")) {
     url = "file:///" + QDir::currentPath() + QDir::separator() + url.mid(2);
@@ -145,7 +154,13 @@ void MainWindow::loadUrl(QString url) {
   webView->load(QUrl(url));
 }
 
-void MainWindow::loadStartupUrl() { loadUrl(optStartupUrl); }
+void MainWindow::loadQml(QString uri) {
+  qDebug() << "Loading QML:" << uri;
+  qmlView->setSource(QUrl::fromLocalFile(uri));
+  qmlView->show();
+}
+
+void MainWindow::loadStartupUrl() { loadUri(optStartupUrl); }
 
 void MainWindow::loadConfig() {
   bool haveUrlInCmdLine = false;
