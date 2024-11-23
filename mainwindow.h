@@ -9,6 +9,8 @@
 #include <QWebEngineFullScreenRequest>
 #include <QWebEnginePage>
 #include <QWebEngineView>
+#include <QCloseEvent>
+#include <qwebengineview.h>
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
@@ -35,14 +37,14 @@ class MainWindow : public QMainWindow {
   void slotShortcutBack();
   void slotShortcutForward();
  private:
-  QShortcut *keyCtrlQ; // Entity of Ctrl + Q hotkeys
-  QShortcut *keyBack; // back in history
+  QShortcut *keyCtrlQ;   // Entity of Ctrl + Q hotkeys
+  QShortcut *keyBack;    // back in history
   QShortcut *keyForward; // forward in history
   void fullScreenRequested(QWebEngineFullScreenRequest request);
   void writeSettings();
   QSettings *appSettings;
  protected:
-  void closeEvent(QCloseEvent *);
+  void closeEvent(QCloseEvent *) override;
 };
 
 #endif  // BROWSERWINDOW_H
