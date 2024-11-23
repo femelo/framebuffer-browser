@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.29)
-project(fb-browser LANGUAGES CXX)
+project(fbbrowser LANGUAGES CXX)
 
 file(GLOB SRC_FILES *.c *.cpp *.qrc)
 
@@ -15,9 +15,9 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui WebEngineWidgets)
 add_definitions (-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
+    main.cpp
+    mainwindow.cpp
+    mainwindow.h
 )
 
 
@@ -25,8 +25,9 @@ add_executable(fbbrowser
     ${PROJECT_SOURCES}
 )
 
-target_link_libraries(fb-browser PUBLIC
+target_link_libraries(fbbrowser PUBLIC
     Qt6::Core
     Qt6::Gui
     Qt6::WebEngineWidgets
 )
+
