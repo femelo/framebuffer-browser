@@ -10,9 +10,10 @@
 #include <QTimer>
 #include <QProcess>
 #include <QDebug>
-#include <QtWebEngineWidgets/QWebEngineFullScreenRequest>
-#include <QtWebEngineWidgets/QWebEngineProfile>
-#include <QtWebEngineWidgets/QWebEngineSettings>
+#include <QWebEngineFullScreenRequest>
+#include <QWebEngineProfile>
+#include <QWebEngineSettings>
+#include <qkeysequence.h>
 
 
 void MainWindow::closeEvent(QCloseEvent *) {
@@ -61,9 +62,8 @@ void MainWindow::fullScreenRequested(QWebEngineFullScreenRequest request) {
 // Slot handler for Ctrl + Q
 void MainWindow::slotShortcutCtrlQ() {
   qDebug() << "closing1";
-//  writeSettings();
-  webView->deleteLater(); // leave gracefully
-  QApplication::quit();
+  // writeSettings();
+  QApplication::exit();
 }
 
 // Slot handler for Ctrl + Left
@@ -110,16 +110,16 @@ MainWindow::MainWindow()
 
   // Ctrl + Q
   keyCtrlQ = new QShortcut(this);         // Initialize the object
-  keyCtrlQ->setKey(Qt::CTRL + Qt::Key_Q); // Set the key code
+  keyCtrlQ->setKey(QKeySequence(Qt::CTRL | Qt::Key_Q)); // Set the key code
   // connect handler to keypress
   connect(keyCtrlQ, SIGNAL(activated()), this, SLOT(slotShortcutCtrlQ()));
 
   keyBack = new QShortcut(this);
-  keyBack->setKey(Qt::CTRL + Qt::Key_Left);
+  keyBack->setKey(QKeySequence(Qt::CTRL | Qt::Key_Left));
   connect(keyBack, SIGNAL(activated()), this, SLOT(slotShortcutBack()));
 
   keyForward = new QShortcut(this);
-  keyForward->setKey(Qt::CTRL + Qt::Key_Right);
+  keyForward->setKey(QKeySequence(Qt::CTRL | Qt::Key_Right));
   connect(keyForward, SIGNAL(activated()), this, SLOT(slotShortcutForward()));
 
   this->webView->page()->profile()->setHttpUserAgent("Mozilla/5.0 (X11; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0");
@@ -131,7 +131,12 @@ MainWindow::MainWindow()
   QTimer::singleShot(1000, this, SLOT(loadStartupUrl()));
 }
 
-MainWindow::~MainWindow() {}
+MainWindow::~MainWindow() {
+  qDebug() << "main window destroyed";
+  webView->close();
+  webView->~QWebEngineView();
+  destroy();
+}
 
 void MainWindow::onLoadStarted() { 
     qDebug() << "onLoadStarted"; 
@@ -184,6 +189,3 @@ void MainWindow::loadConfig() {
     optProxyPort = configObject["proxyPort"].toInt();
   }
 }
-
-
-

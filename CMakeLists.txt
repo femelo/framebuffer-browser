@@ -3,6 +3,8 @@ project(FBrowser LANGUAGES CXX)
 
 file(GLOB source_files *.c *.cpp *.qrc)
 
+set(CMAKE_PREFIX_PATH /opt/qt6.8/6.8.0/gcc_64)
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOMOC ON)
@@ -13,7 +15,7 @@ set(CMAKE_AUTORCC ON)
 set(FULLBROWSER OFF CACHE BOOL "Full Featured Browser Support")
 configure_file(config.h.in config.h)
 
-find_package(Qt5 REQUIRED COMPONENTS Core Gui WebEngineWidgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui WebEngineWidgets)
 add_definitions (-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 if (FULLBROWSER)
@@ -45,7 +47,7 @@ add_executable(FBrowser
 )
 
 target_link_libraries(FBrowser PUBLIC
-    Qt5::Core
-    Qt5::Gui
-    Qt5::WebEngineWidgets
+    Qt6::Core
+    Qt6::Gui
+    Qt6::WebEngineWidgets
 )
