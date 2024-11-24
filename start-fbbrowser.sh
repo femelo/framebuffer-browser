@@ -1,27 +1,29 @@
 #!/bin/bash
 ARGS="$@"
+CONFIG_FILE=$HOME/.config/fb-browser/config
 
 static_settings() {
   EXECUTABLE=fbbrowser
 }
 
 load_settings() {
-  echo "Loading settings..."
+  echo "Verifying configuration..."
   if [ ! -e "config.json" ]; then
      echo -e '{\n"url":"https://google.com",\n"wsServerPort":0,\n"width": 0,\n"height": 0,\n"proxyHost": "",\n"proxyPort": 0\n}' > config.json
   fi
-  if [ ! -e "$HOME/.config/fb-browser/config" ];then
+  if [ ! -e "$CONFIG_FILE" ]; then
     need_configure
-  fi
-  if [[ $(grep -L "BACKEND_DEV" "$HOME/.config/fb-browser/config") ]]; then
+  elif [[ $(grep -L "BACKEND_DEV" "$CONFIG_FILE") ]]; then
     need_configure
-  fi
-  if [[ $(grep -L "KEYBOARD_DEV" "$HOME/.config/fb-browser/config") ]]; then
+  elif [[ $(grep -L "KEYBOARD_DEV" "$CONFIG_FILE") ]]; then
     need_configure
+  else
+    echo "Configuration file found"
   fi
-  source <(grep = $HOME/.config/fb-browser/config)
+  echo "Loading settings..."
+  source <(grep = $CONFIG_FILE)
   echo "Settings loaded"
-  if [ "$BACKEND_DEV" == "fb" ];then
+  if [ "$BACKEND_DEV" == "fb" ]; then
      echo "Selected video backend: fb"
      export QT_QPA_PLATFORM=linuxfb:fb=/dev/fb0:nographicsmodeswitch=1
      # Disable libinput support for fb
@@ -132,19 +134,19 @@ save_setting() {
   if [ ! -d "$HOME/.config/fb-browser" ];then
      mkdir -p "$HOME/.config/fb-browser"
   fi
-  if [ ! -e "$HOME/.config/fb-browser/config" ];then
-     echo "" >  "$HOME/.config/fb-browser/config"
+  if [ ! -e "$CONFIG_FILE" ];then
+     echo "" >  "$CONFIG_FILE"
   fi
     sed -i \
         -e '/^#\?\(\s*'"${name}"'\s*=\s*\).*/{s//\1'"${value}"'/;:a;n;ba;q}' \
-        -e '$a'"${name}"'='"${value}" "$HOME/.config/fb-browser/config"
+        -e '$a'"${name}"'='"${value}" "$CONFIG_FILE"
 }
 
 # del setting based on device name
 del_setting() {
  local SETTING="$1"
  echo "Deleting setting $SETTING"
- sed -i '/$SETTING/d' "$HOME/.config/fb-browser/config"
+ sed -i '/$SETTING/d' "$CONFIG_FILE"
 }
 
 config_device() {
@@ -207,7 +209,8 @@ configure_manual() {
   echo -e "\n\n\nSelect video backend:"
   echo "1 -> linux framebuffer (default fb)"
   echo "2 -> egls implementation using kernel mode setting and video card drivers (works only with supported video cards)"
-  if [[ $(grep "BACKEND_DEV" "$HOME/.config/fb-browser/config") ]]; then
+  
+  if [ -e "$CONFIG_FILE" ] && [[ $(grep "BACKEND_DEV" "$CONFIG_FILE") ]]; then
     echo "3 -> continue without (use previous settings)"
   fi
   while true; do
@@ -274,7 +277,7 @@ need_configure() {
           if [ ! -d "$HOME/.config/fb-browser" ];then
              mkdir -p "$HOME/.config/fb-browser"
           fi
-          echo "" > $HOME/.config/fb-browser/config
+          echo "" > $CONFIG_FILE
           echo "Configuration reset done!"
       elif [ "$ans" == 4 ];then
           exit 0
@@ -344,7 +347,7 @@ if [ "$1" = "autoconfigure" ];then
   exit 0
 fi
 if [ "$1" = "reset" ];then
-  echo "" > $HOME/.config/fb-browser/config
+  echo "" > $CONFIG_FILE
   echo "Done"
   exit 0
 fi
