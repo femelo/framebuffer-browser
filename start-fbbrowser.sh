@@ -1,27 +1,29 @@
 #!/bin/bash
 ARGS="$@"
+CONFIG_FILE=$HOME/.config/fb-browser/config
 
 static_settings() {
-  EXECUTABLE=fbrowser-bin
+  EXECUTABLE=fbbrowser
 }
 
 load_settings() {
-  echo "Loading settings..."
+  echo "Verifying configuration..."
   if [ ! -e "config.json" ]; then
-     echo -e '{\n"url":"http://google.com",\n"wsServerPort":0,\n"width": 0,\n"height": 0,\n"proxyHost": "",\n"proxyPort": 0\n}' > config.json
+     echo -e '{\n"url":"https://google.com",\n"wsServerPort":0,\n"width": 0,\n"height": 0,\n"proxyHost": "",\n"proxyPort": 0\n}' > config.json
   fi
-  if [ ! -e "$HOME/.config/fbrowser/config" ];then
+  if [ ! -e "$CONFIG_FILE" ]; then
     need_configure
-  fi
-  if [[ $(grep -L "BACKEND_DEV" "$HOME/.config/fbrowser/config") ]]; then
+  elif [[ $(grep -L "BACKEND_DEV" "$CONFIG_FILE") ]]; then
     need_configure
-  fi
-  if [[ $(grep -L "KEYBOARD_DEV" "$HOME/.config/fbrowser/config") ]]; then
+  elif [[ $(grep -L "KEYBOARD_DEV" "$CONFIG_FILE") ]]; then
     need_configure
+  else
+    echo "Configuration file found"
   fi
-  source <(grep = $HOME/.config/fbrowser/config)
+  echo "Loading settings..."
+  source <(grep = $CONFIG_FILE)
   echo "Settings loaded"
-  if [ "$BACKEND_DEV" == "fb" ];then
+  if [ "$BACKEND_DEV" == "fb" ]; then
      echo "Selected video backend: fb"
      export QT_QPA_PLATFORM=linuxfb:fb=/dev/fb0:nographicsmodeswitch=1
      # Disable libinput support for fb
@@ -61,43 +63,19 @@ launch() {
   # where are the executable of the program ?
   if [ -e "/usr/local/bin/${EXECUTABLE}" ];then
      EXE="/usr/local/bin/${EXECUTABLE}"
-     exes=$((exes+1))
-  fi
-  if [ -e "/usr/local/bin/${EXECUTABLE}-kiosk" ];then
-     EXE="/usr/local/bin/${EXECUTABLE}-kiosk"
-     exes=$((exes+1))
-  fi
-  if [ -e "build/FBrowser" ];then
-     EXE="./build/FBrowser"
+  else if [ -e "build/fbbrowser" ]; then
+     EXE="./build/fbbrowser"
   else
-     if [ "$exes" == 2 ]; then
-       echo "We have detected two versions of fbrowser on your system"
-       echo "One is standard and another is kiosk mode"
-       echo "Which one would you like to use ?"
-       echo "1 -> Standard"
-       echo "2 -> Kiosk mode"
-       while true; do
-         echo 'Enter ID:'
-         read ans
-         if [ "$ans" == 1 ];then
-            EXE="/usr/local/bin/${EXECUTABLE}"
-            break
-         elif [ "$ans" == 2 ];then
-            EXE="/usr/local/bin/${EXECUTABLE}-kiosk"
-            break
-        else
-            echo 'Please enter valid number 1, 2'
-            echo "You wrote: $ans"
-        fi
-      done
-     fi
+    EXE=""
+  fi
+     
   fi
   if [ "$BACKEND_DEV" == "fb" ];then
     # turn off tty1 cursor blinking
     setterm -cursor off > /dev/tty1
   fi
   if [ "$EXE" == "" ];then
-    echo "Program executable not found, are you compiled or installed the  program?"
+    echo "Program executable not found, have you compiled or installed the program?"
   else
     if [ "$ARGS" == "" ];then
       $EXE
@@ -153,22 +131,22 @@ save_setting() {
   local name=${1//\//\\/}
   local value=${2//\//\\/}
 
-  if [ ! -d "$HOME/.config/fbrowser" ];then
-     mkdir -p "$HOME/.config/fbrowser"
+  if [ ! -d "$HOME/.config/fb-browser" ];then
+     mkdir -p "$HOME/.config/fb-browser"
   fi
-  if [ ! -e "$HOME/.config/fbrowser/config" ];then
-     echo "" >  "$HOME/.config/fbrowser/config"
+  if [ ! -e "$CONFIG_FILE" ];then
+     echo "" >  "$CONFIG_FILE"
   fi
     sed -i \
         -e '/^#\?\(\s*'"${name}"'\s*=\s*\).*/{s//\1'"${value}"'/;:a;n;ba;q}' \
-        -e '$a'"${name}"'='"${value}" "$HOME/.config/fbrowser/config"
+        -e '$a'"${name}"'='"${value}" "$CONFIG_FILE"
 }
 
 # del setting based on device name
 del_setting() {
  local SETTING="$1"
  echo "Deleting setting $SETTING"
- sed -i '/$SETTING/d' "$HOME/.config/fbrowser/config"
+ sed -i '/$SETTING/d' "$CONFIG_FILE"
 }
 
 config_device() {
@@ -231,7 +209,8 @@ configure_manual() {
   echo -e "\n\n\nSelect video backend:"
   echo "1 -> linux framebuffer (default fb)"
   echo "2 -> egls implementation using kernel mode setting and video card drivers (works only with supported video cards)"
-  if [[ $(grep "BACKEND_DEV" "$HOME/.config/fbrowser/config") ]]; then
+  
+  if [ -e "$CONFIG_FILE" ] && [[ $(grep "BACKEND_DEV" "$CONFIG_FILE") ]]; then
     echo "3 -> continue without (use previous settings)"
   fi
   while true; do
@@ -295,10 +274,10 @@ need_configure() {
           configure_manual
           break
       elif [ "$ans" == 3 ];then
-          if [ ! -d "$HOME/.config/fbrowser" ];then
-             mkdir -p "$HOME/.config/fbrowser"
+          if [ ! -d "$HOME/.config/fb-browser" ];then
+             mkdir -p "$HOME/.config/fb-browser"
           fi
-          echo "" > $HOME/.config/fbrowser/config
+          echo "" > $CONFIG_FILE
           echo "Configuration reset done!"
       elif [ "$ans" == 4 ];then
           exit 0
@@ -347,7 +326,7 @@ banner() {
 }
 
 main() {
-  if [ ! -d "$HOME/.config/fbrowser" ];then
+  if [ ! -d "$HOME/.config/fb-browser" ];then
     need_configure
   fi
   load_settings
@@ -368,7 +347,7 @@ if [ "$1" = "autoconfigure" ];then
   exit 0
 fi
 if [ "$1" = "reset" ];then
-  echo "" > $HOME/.config/fbrowser/config
+  echo "" > $CONFIG_FILE
   echo "Done"
   exit 0
 fi

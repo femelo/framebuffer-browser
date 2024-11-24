@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.5)
-project(FBrowser LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.29)
+project(fbbrowser LANGUAGES CXX)
 
-file(GLOB source_files *.c *.cpp *.qrc)
+file(GLOB SRC_FILES *.c *.cpp *.qrc)
 
 set(CMAKE_PREFIX_PATH /opt/qt6.8/6.8.0/gcc_64)
 
@@ -11,43 +11,23 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-
-set(FULLBROWSER OFF CACHE BOOL "Full Featured Browser Support")
-configure_file(config.h.in config.h)
-
 find_package(Qt6 REQUIRED COMPONENTS Core Gui WebEngineWidgets)
 add_definitions (-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
-if (FULLBROWSER)
 set(PROJECT_SOURCES
-    browser.cpp browser.h
-    browserwindow.cpp browserwindow.h
-    certificateerrordialog.ui
-    downloadmanagerwidget.cpp downloadmanagerwidget.h downloadmanagerwidget.ui
-    downloadwidget.cpp downloadwidget.h downloadwidget.ui
     main.cpp
-    passworddialog.ui
-    tabwidget.cpp tabwidget.h
-    webpage.cpp webpage.h
-    webpopupwindow.cpp webpopupwindow.h
-    webview.cpp webview.h
-    data/simplebrowser.qrc
+    mainwindow.cpp
+    mainwindow.h
 )
-else()
-set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-)
-endif()
 
 
-add_executable(FBrowser
+add_executable(fbbrowser
     ${PROJECT_SOURCES}
 )
 
-target_link_libraries(FBrowser PUBLIC
+target_link_libraries(fbbrowser PUBLIC
     Qt6::Core
     Qt6::Gui
     Qt6::WebEngineWidgets
 )
+
