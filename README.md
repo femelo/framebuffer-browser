@@ -23,7 +23,7 @@ mkdir build && cd build && cmake .. && make && cd ..
 
 ## Configure
 
-All device input and other settings are described either in **run-fb** or **run-eglfs** files, also note that your local account must be in the following groups:
+All device input and other settings are described in the script **start-fbbrowser.sh**, also note that your local account must be in the following groups:
 
 ```shell
 tty, audio, video, usb, input
